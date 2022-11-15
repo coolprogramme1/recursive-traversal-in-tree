@@ -1,5 +1,5 @@
 # linkedlistcode
-code is use to solve problem in linkedlist
+//code is use to solve problem in linkedlist
 import java.io.*;
 import java.util.*;
 
