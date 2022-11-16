@@ -1,0 +1,42 @@
+ class Node {
+    int data;
+    Node lchild;
+    Node rchild;
+    public Node(int key){
+        data=key;
+
+    }
+     public void inorder(Node s){
+         if(s==null){
+             return ;
+         }
+         inorder(s.lchild);
+         System.out.println(s.data);
+         inorder(s.rchild);
+     }
+
+}
+public class bst {
+    public static void main(String[] args) {
+        Node s = new Node(5);
+         s.lchild=new Node(10);
+         s.rchild=new Node(15);
+         s.lchild.rchild=new Node(20);
+         s.lchild.lchild=new Node(25);
+         s.rchild.rchild=new Node(30);
+         s.rchild.lchild=new Node(35);
+
+        System.out.println(s.data);
+        System.out.println(s.lchild.data);
+        System.out.println(s.rchild.data);
+
+                System.out.println(s.lchild.rchild.data);
+                        System.out.println(s.lchild.lchild.data);
+        System.out.println(s.rchild.rchild.data);
+        System.out.println(s.rchild.lchild.data);
+        System.out.println("now for inorder");
+         s.inorder(s);
+    }
+
+
+}
