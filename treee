@@ -1,0 +1,185 @@
+package tree1;
+import java.util.*;
+import java.math.*;
+class tree{
+	int data;
+	tree lchild;
+	tree rchild;
+	public tree(int key) {
+		data=key;
+	}
+
+	public List<List<Integer>>lvlorder(tree root){
+		List<List<Integer>> wraplist=new LinkedList<List<Integer>>();
+	Queue<tree> que=new LinkedList<tree>();
+		que.offer(root);
+		if(root==null) {
+			return wraplist;
+		}
+		while(!que.isEmpty()) {
+			int num=que.size();
+			List<Integer>sublist=new LinkedList<Integer>();
+			for(int i=0;i<num;i++) {
+				if(que.peek().lchild!=null) {
+					que.offer(que.peek().lchild);
+				}
+				if(que.peek().rchild!=null) {
+					que.offer(que.peek().rchild);
+				}
+				sublist.add(que.poll().data);
+			}
+			wraplist.add(sublist);
+		}	
+		return wraplist;
+	}
+	public List<Integer>preorder(tree root){
+		List<Integer>lt=new ArrayList<Integer>();
+		Stack<tree>st=new Stack<tree>();
+		st.add(root);
+		if(root==null) {
+			return lt;
+		}
+		while(!st.isEmpty()) {
+			root=st.pop();
+			if(root.rchild!=null) {
+				st.push(root.rchild);
+			}
+			if(root.lchild!=null) {
+				st.push(root.lchild);
+			}
+		lt.add(root.data);
+		}
+		return lt;
+	}
+	public List<Integer>inorder(tree root){
+		List<Integer>lt=new ArrayList<Integer>();
+		Stack<tree>st=new Stack<tree>();
+		tree node=root;
+		if(root==null) {
+			return lt;
+		}
+		while(true) {
+			if(node!=null) {
+				st.push(node);
+				node=node.lchild;
+			}
+			else {
+				if(st.isEmpty()) {
+					break;
+				}
+				node=st.pop();
+				lt.add(node.data);
+			node=node.rchild;
+			}
+			
+		}
+		return lt;
+	}
+	public int maxdepth(tree root) {
+		if(root==null) {
+			return 0;
+		}
+		int lh=maxdepth(root.lchild);
+		int rh=maxdepth(root.rchild);
+		return 1+Math.max(lh,rh);
+	}
+	public boolean bal(tree node) {
+		return bel(node)!=-1;
+	}
+	public int bel(tree root)
+	{
+		if(root==null) {
+			return 0;
+		}
+		int lh=bel(root.lchild);
+		int rh=bel(root.rchild);
+		if(lh==-1||rh==-1) {
+			return -1;
+		}
+		if(Math.abs(lh-rh)>1)return -1;
+		
+		return(1+Math.max(lh, rh));
+	}
+	public int dai(tree node) {
+		int [] diameter=new int[1];
+		dia(node,diameter);
+		return(diameter[0]);
+	}
+	int dia(tree node ,int [] dia) {
+		if(node==null) {
+			return 0;
+		}
+		int lh=dia(node.lchild,dia);
+		int rh=dia(node.rchild,dia);
+		dia[0]=Math.max(dia[0], rh+lh);
+		return 1+Math.max(lh, rh);
+	}
+	public ArrayList<Integer>fun(tree node){
+		ArrayList<Integer>result=new ArrayList<Integer>();
+		run(node,result,0);
+		return result;
+	}
+	public void run(tree node,ArrayList<Integer>re,int level) {
+		if(node==null) {
+			return;
+		}
+		if(level==re.size()) {
+			re.add(node.data);
+		}
+		run(node.rchild,re,level+1);
+		run(node.lchild,re,level+1);
+	}
+	public boolean solution(tree node) {
+		return node==null||symmetric(node.lchild,node.rchild);
+	}
+	public boolean symmetric(tree left,tree right) {
+		if(left==null||right==null) {
+			return left==right;
+		}
+		if(left.data!=right.data) {
+			return false;
+		}
+		return symmetric(left.lchild,right.rchild)&&symmetric(left.rchild,right.lchild);
+	}
+	public ArrayList<Integer>find(tree node,int x){
+		ArrayList<Integer>lt=new ArrayList<Integer>();
+		findnode(node,lt,x);
+		return lt;
+	}
+	public boolean findnode(tree node,ArrayList<Integer>lt,int x){
+		//ArrayList<Integer>lt=new ArrayList<Integer>();
+		if(node==null) {
+			return false;
+		}
+		lt.add(node.data);
+		if(node.data==x) {
+			return true;
+		}
+		if(findnode(node.lchild,lt,x)||findnode(node.rchild,lt,x)) {
+			return true;
+		}
+		lt.remove(lt.size()-1);
+		return false;
+	}
+}
+public class Main 
+{  
+	public static void main(String [] args) {
+		tree t=new tree(10);
+		t.lchild=new tree(20);
+		t.rchild=new tree(30);
+		t.lchild.lchild=new tree(40);
+		t.lchild.rchild=new tree(50);
+		//t.lchild.rchild.lchild=new tree(90);
+		t.rchild.lchild=new tree(60);
+		t.rchild.rchild=new tree(70);
+		System.out.println(t.lvlorder(t));
+		System.out.println(t.preorder(t));
+		System.out.println(t.inorder(t));
+		System.out.println("maximum depth is ==> "+t.maxdepth(t));
+		System.out.println(t.dai(t));
+		System.out.println(t.fun(t));
+		System.out.println("tree is symmetric or not==> "+t.solution(t));
+		System.out.println("find node from root==> "+t.find(t,70));
+	}
+}
